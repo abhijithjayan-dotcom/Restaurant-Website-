@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINA | Modern Taste</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-bright: #f2d06b;
+            --dark-bg: #050505;
+            --card-bg: #111111;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-gradient: linear-gradient(135deg, #d4af37 0%, #f2d06b 100%);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: var(--dark-bg); 
+            color: #ffffff; 
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed; width: 100%; z-index: 2000;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+        }
+        nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .logo { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.4rem; 
+            color: var(--gold); 
+            font-weight: 700; 
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .nav-links a { 
+            color: #fff; text-decoration: none; font-weight: 600; font-size: 0.7rem; 
+            letter-spacing: 3px; transition: var(--transition); opacity: 0.6; 
+        }
+        .nav-links a:hover { opacity: 1; color: var(--gold); }
+        .cart-icon { 
+            cursor: pointer; background: var(--accent-gradient); padding: 10px 22px; 
+            border-radius: 4px; color: #000; font-weight: 800; font-size: 0.75rem; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); transition: var(--transition);
+        }
+        .cart-icon:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); }
+
+        /*--- HERO SECTION --- */
+        .hero {
+            height: 100vh; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.6), var(--dark-bg)), 
+                        url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+            text-align: center;
+        }
+        .hero-content h1 { 
+            font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 10vw, 7.5rem); 
+            line-height: 1.1; margin-bottom: 2rem; font-weight: 700;
+        }
+        
+        /* --- SPA PAGES --- */
+        .page { display: none; padding: 150px 2rem 100px; min-height: 100vh; max-width: 1400px; margin: 0 auto; }
+        .active-page { display: block; animation: slideUp 0.8s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- GRID LAYOUTS --- */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3rem; }
+        .dish-card { 
+            background: var(--card-bg); border: 1px solid var(--glass-border); 
+            border-radius: 15px; overflow: hidden; transition: var(--transition);
+            position: relative;
+        }
+        .dish-card:hover { border-color: var(--gold); transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .dish-img { width: 100%; height: 300px; object-fit: cover; transition: 0.5s; }
+        .dish-card:hover .dish-img { transform: scale(1.05); }
+        .dish-info { padding: 2rem; text-align: center; }
+
+        /* --- RESERVATION --- */
+        .res-container {
+            display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 4rem; 
+            background: var(--glass); padding: 4rem; border-radius: 30px; 
+            border: 1px solid var(--glass-border); 
+        }
+        .guest-chip {
+            padding: 15px; background: rgba(255,255,255,0.05); 
+            border: 1px solid var(--glass-border); border-radius: 8px;
+            cursor: pointer; font-size: 0.8rem; transition: 0.3s; text-align: center; flex: 1;
+        }
+        .guest-chip.active { background: var(--accent-gradient); color: black; font-weight: 800; border-color: transparent; }
+
+        /* --- INPUTS --- */
+        input, textarea {
+            width: 100%; padding: 18px; margin-bottom: 1.2rem;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: white; border-radius: 8px; font-family: inherit; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); }
+
+        /* --- BUTTONS --- */
+        .btn-gold { 
+            background: var(--accent-gradient); color: black; border: none; 
+            padding: 18px; border-radius: 8px; font-weight: 800; 
+            cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 2px;
+            transition: var(--transition);
+        }
+        .btn-gold:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        /* --- CART & MODALS --- */
+        #cart-panel {
+            position: fixed; right: -480px; top: 0; width: 450px; height: 100vh;
+            background: #080808; border-left: 1px solid var(--gold); z-index: 3000;
+            padding: 4rem 3rem; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+        }
+        #cart-panel.open { right: 0; }
+        .modal-overlay {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center;
+            backdrop-filter: blur(10px);
+        }
+        .modal-box { background:#111; padding:3.5rem; border-radius:20px; border:1px solid var(--gold); width:90%; max-width:550px; }
+
+        /* --- LOGIN PAGE STYLES --- */
+        .login-wrapper {
+            max-width: 450px; margin: 0 auto; padding: 4rem;
+            background: var(--glass); border: 1px solid var(--glass-border);
+            border-radius: 30px; backdrop-filter: blur(15px); text-align: center;
+        }
+        .login-tabs { display: flex; gap: 2rem; justify-content: center; margin-bottom: 2.5rem; }
+        .login-tab { 
+            cursor: pointer; opacity: 0.4; font-size: 0.75rem; 
+            letter-spacing: 3px; font-weight: 800; transition: 0.3s; 
+        }
+        .login-tab.active { opacity: 1; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 8px; }
+
+        @media (max-width: 900px) {
+            .res-container { grid-template-columns: 1fr; padding: 2rem; }
+            #cart-panel { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="checkout-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="font-family:'Playfair Display'; margin-bottom:1.5rem; color:var(--gold); font-size: 2.5rem;">Delivery Info</h2>
+            <input type="email" id="order-email" placeholder="Email Address">
+            <input type="tel" id="order-phone" placeholder="Phone Number">
+            <textarea id="order-address" placeholder="Complete Home Address" rows="3"></textarea>
+            <button class="btn-gold" onclick="finalOrder()">CONFIRM & PAY</button>
+            <p onclick="closeCheckout()" style="text-align:center; margin-top:1.5rem; cursor:pointer; font-size:0.8rem; opacity:0.5; letter-spacing: 2px;">GO BACK</p>
+        </div>
+    </div>
+
+    <div id="cart-panel">
+        <h2 style="font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 2.5rem;">Your Selection</h2>
+        <div id="cart-items" style="max-height: 50vh; overflow-y: auto; padding-right: 10px;"></div>
+        <div style="margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 800; margin-bottom: 2.5rem;">
+                <span>Total</span>
+                <span id="cart-total" style="color: var(--gold);">₹0</span>
+            </div>
+            <button class="btn-gold" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
+            <p onclick="toggleCart()" style="text-align: center; margin-top: 2rem; cursor: pointer; font-size: 0.7rem; letter-spacing: 3px; opacity: 0.5;">CLOSE PANEL</p>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo" onclick="showPage('home')">Lumina</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('home')">HOME</a></li>
+                <li><a href="#" onclick="showPage('menu')">MENU</a></li>
+                <li><a href="#" onclick="showPage('chefs')">MASTERS</a></li>
+                <li><a href="#" onclick="showPage('book')">RESERVE</a></li>
+                <li><a href="#" onclick="showPage('login')" id="nav-auth-btn">LOGIN</a></li>
+                <li><div class="cart-icon" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</div></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="page active-page hero">
+        <div class="hero-content">
+            <p style="letter-spacing: 12px; color: var(--gold); margin-bottom: 2rem; font-size: 0.8rem; font-weight: 800;">ESTABLISHED 2026</p>
+            <h1 style="font-style: italic;">The Art of <br>Modern Taste</h1>
+            <button class="btn-gold" style="width: auto; padding: 20px 60px;" onclick="showPage('menu')">DISCOVER THE MENU</button>
+        </div>
+    </section>
+
+    <section id="menu" class="page">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 4rem; text-align: center; margin-bottom: 4rem;">The Menu</h2>
+        <div class="menu-grid" id="menu-container"></div>
+    </section>
+
+    <section id="chefs" class="page">
+        <h2 style="text-align: center; margin-bottom: 5rem; font-size: 4rem; font-family: 'Playfair Display';">The Architects</h2>
+        <div class="menu-grid" id="chef-container"></div>
+    </section>
+
+    <section id="book" class="page">
+        <div class="res-container">
+            <form id="reservation-form">
+                <h3 style="margin-bottom: 2.5rem; color: var(--gold); font-size: 1.8rem; font-family: 'Playfair Display';">Secure Your Table</h3>
+                
+                <label style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; font-weight: 800;">FULL NAME</label>
+                <input type="text" id="res-name" placeholder="Guest Name" oninput="syncSummary()" required>
+                
+                <label style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; font-weight: 800;">CONTACT INFO</label>
+                <input type="email" id="res-email" placeholder="Email Address" required>
+                <input type="tel" id="res-phone" placeholder="Phone Number" required>
+
+                <label style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; font-weight: 800;">GUESTS</label>
+                <div style="display: flex; gap: 1rem; margin-bottom: 2.5rem; margin-top: 0.5rem;">
+                    <div class="guest-chip active" onclick="setGuests(2)">2 People</div>
+                    <div class="guest-chip" onclick="setGuests(4)">4 People</div>
+                    <div class="guest-chip" onclick="setGuests(6)">6 People</div>
+                </div>
+
+                <label style="font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; font-weight: 800;">TIME SLOT</label>
+                <input type="time" id="res-time-input" value="19:00" oninput="syncSummary()" required>
+
+                <button class="btn-gold" type="submit" id="res-btn">CONFIRM RESERVATION</button>
+            </form>
+
+            <div style="border-left: 1px solid var(--glass-border); padding-left: 4rem; display: flex; align-items: center; background: rgba(255,255,255,0.02); border-radius: 0 30px 30px 0;">
+                <div id="res-live-summary">
+                    <p style="opacity: 0.4; font-size: 0.7rem; letter-spacing: 4px; font-weight: 800;">BOOKING PREVIEW</p>
+                    <h4 id="sum-name" style="font-size: 2.5rem; margin: 1.5rem 0; font-family: 'Playfair Display';">Guest</h4>
+                    <p id="sum-details" style="color: var(--gold); font-weight: 800; font-size: 1.2rem; letter-spacing: 1px;">2 People @ 19:00</p>
+                    <div style="margin-top: 2rem; width: 50px; height: 2px; background: var(--gold);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="login" class="page">
+        <div class="login-wrapper">
+            <div class="login-tabs">
+                <span class="login-tab active" id="tab-in" onclick="switchAuthMode('in')">SIGN IN</span>
+                <span class="login-tab" id="tab-up" onclick="switchAuthMode('up')">MEMBERSHIP</span>
+            </div>
+            
+            <h2 id="auth-title" style="font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 2rem;">Welcome Back</h2>
+            
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <div id="signup-only" style="display: none;">
+                    <input type="text" id="auth-name" placeholder="Full Name">
+                </div>
+                <input type="email" id="auth-email" placeholder="Email Address" required>
+                <input type="password" id="auth-pass" placeholder="Password" required>
+                <button class="btn-gold" type="submit" id="auth-btn">ENTER LUMINA</button>
+            </form>
+            
+            <p style="margin-top: 2.5rem; font-size: 0.65rem; opacity: 0.4; letter-spacing: 2px; line-height: 1.6;">
+                ACCESS TO EXCLUSIVE DINING EVENTS AND PRIVATE CHEF SESSIONS.
+            </p>
+        </div>
+    </section>
+
+    <script>
+        const menuData = [
+            { id: 1, name: "Chicken Biryani", price: 300, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVt4aAT6t8SWbxuE7YgThGOLOOPImFMqCpYg&s" },
+            { id: 2, name: "Mutton Biryani", price: 470, img: "https://www.cubesnjuliennes.com/wp-content/uploads/2021/03/Best-Mutton-Biryani-Recipe.jpg" },
+            { id: 3, name: "Butter Chicken", price: 240, img: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/04/butter-chicken-recipe-500x500.jpg" },
+            { id: 4, name: "Fish Curry", price: 350, img: "https://www.thedeliciouscrescent.com/wp-content/uploads/2023/07/Fish-Curry-4.jpg" },
+            { id: 5, name: "Veg Biryani", price: 150, img: "https://madhurasrecipe.com/wp-content/uploads/2023/03/Veg-Biryani-2.jpg" },
+            { id: 6, name: "Wild Mushroom Pulao", price: 750, img: "https://www.connoisseurusveg.com/wp-content/uploads/2024/10/wild-rice-pilaf-24-12.jpg" },
+            { id: 7, name: "Paneer Butter Masala", price: 280, img: "https://myfoodstory.com/wp-content/uploads/2021/07/restaurant-style-paneer-butter-masala-2-500x500.jpg" },
+            { id: 8, name: "Chole Bhature", price: 110, img: "https://i.pinimg.com/736x/80/3f/f0/803ff029867e021b7b4193f58e1c4ad1.jpg" },
+            { id: 9, name: "Tandoori Lobster", price: 1200, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9r357iN395pvMsxJu-kZ6vZkhi2wL4gKQRg&s" },
+            { id: 10, name: "Prawn Curry", price: 300, img: "https://nadiashealthykitchen.com/wp-content/uploads/2015/02/quick-prawn-coconut-curry_2-1.jpg" },
+            { id: 11, name: "Chicken Tikka Masala", price: 250, img: "https://bellyfull.net/wp-content/uploads/2021/05/Chicken-Tikka-Masala-blog-featured.jpg" },
+            { id: 13, name: "Butter Naan", price: 25, img: "https://bakerstable.net/wp-content/uploads/2021/02/homemade-naan-26-e1613344346440.jpg" },
+            { id: 14, name: "Chicken Haleem", price: 360, img: "https://www.licious.in/blog/wp-content/uploads/2022/04/Chicken-Haleem-Cooked-min-compressed-scaled.jpg" },
+            { id: 15, name: "Mutton Haleem", price: 420, img: "https://www.licious.in/blog/wp-content/uploads/2019/11/Haleem-1-e1574922046644.jpg" },
+            { id: 12, name: "Gulab Jamun", price: 45, img: "https://greedyeats.com/wp-content/uploads/2024/10/Gulab-Jamun.jpg" }
+        ];
+
+        const chefsData = [
+            { name: "Sanjeev Kapoor", role: "Master Consultant", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw77ys9lMtRz5AQ81VMr9-CAgLbxgADv2tWg&s" },
+            { name: "Vikas Khanna", role: "Creative Director", img: "https://asiasociety.org/sites/default/files/styles/1200w/public/2020-08/200827_vikas_khanna_AGC.jpg" },
+            { name: "Ranveer Brar", role: "Cuisine Architect", img: "https://pbs.twimg.com/profile_images/1841147726043455490/-VnwmoMu_400x400.jpg" },
+            { name: "Garima Arora", role: "Innovations Head", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWhop2Dpn-f4fSJQ3ag0RTi1YJk3iLM85pw&s" },
+            { name: "Manish Mehrotra", role: "Executive Gastronome", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaWgnozUlqZERozszE7nRqPNx4KSYIf2QTmQ&s"}
+        ];
+
+        let cart = [];
+        let resState = { guests: '2 People' };
+        let authMode = 'in';
+
+        // --- AUTH FUNCTIONS ---
+        function switchAuthMode(mode) {
+            authMode = mode;
+            const title = document.getElementById('auth-title');
+            const btn = document.getElementById('auth-btn');
+            const signupFields = document.getElementById('signup-only');
+            
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            
+            if(mode === 'up') {
+                document.getElementById('tab-up').classList.add('active');
+                title.innerText = "Join the Club";
+                btn.innerText = "CREATE ACCOUNT";
+                signupFields.style.display = "block";
+            } else {
+                document.getElementById('tab-in').classList.add('active');
+                title.innerText = "Welcome Back";
+                btn.innerText = "ENTER LUMINA";
+                signupFields.style.display = "none";
+            }
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            alert(authMode === 'in' ? `Welcome back to Lumina!` : `Account created for ${email}!`);
+            document.getElementById('nav-auth-btn').innerText = "PROFILE";
+            showPage('home');
+        }
+
+        // --- CORE FUNCTIONS ---
+        function showPage(id) { 
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(id).classList.add('active-page');
+            window.scrollTo(0, 0);
+        }
+
+        function renderMenu() {
+            document.getElementById('menu-container').innerHTML = menuData.map(dish => `
+                <div class="dish-card">
+                    <img src="${dish.img}" class="dish-img">
+                    <div class="dish-info">
+                        <h3 style="font-family:'Playfair Display'; margin-bottom:0.8rem; font-size: 1.5rem;">${dish.name}</h3>
+                        <p style="font-size:1.3rem; font-weight:800; margin-bottom:1.5rem; color:var(--gold);">₹${dish.price}</p>
+                        <button class="btn-gold" onclick="addToCart(${dish.id})">ADD TO ORDER</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderChefs() {
+            document.getElementById('chef-container').innerHTML = chefsData.map(chef => `
+                <div class="dish-card">
+                    <img src="${chef.img}" class="dish-img" style="height:450px; filter:grayscale(1) contrast(1.2);">
+                    <div class="dish-info" style="text-align: left; background: linear-gradient(transparent, #000);">
+                        <h3 style="font-family:'Playfair Display'; font-size: 1.8rem;">${chef.name}</h3>
+                        <p style="color:var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 0.7rem;">${chef.role}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            cart.push(menuData.find(d => d.id === id));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            document.getElementById('cart-items').innerHTML = cart.map((item, i) => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div>
+                        <p style="font-weight: 800; font-size: 0.9rem;">${item.name}</p>
+                        <p style="color: var(--gold); font-size: 0.8rem;">₹${item.price}</p>
+                    </div>
+                    <span onclick="removeItem(${i})" style="color:#ff4444; cursor:pointer; font-weight: 800;">✕</span>
+                </div>
+            `).join('');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total').innerText = `₹${total}`;
+        }
+
+        function removeItem(i) { cart.splice(i, 1); updateCartUI(); }
+        function toggleCart() { document.getElementById('cart-panel').classList.toggle('open'); }
+        function openCheckout() {
+            if (cart.length === 0) return alert("Your order is empty!");
+            document.getElementById('checkout-modal').style.display = 'flex';
+        }
+        function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
+
+        function finalOrder() {
+            const email = document.getElementById('order-email').value;
+            if (!email || !document.getElementById('order-address').value) return alert("Please complete the form.");
+            alert(`ORDER PLACED!\nA confirmation email has been sent to ${email}.`);
+            cart = []; updateCartUI(); closeCheckout(); toggleCart();
+        }
+
+        function setGuests(val) {
+            resState.guests = val + ' People';
+            const chips = document.querySelectorAll('.guest-chip');
+            chips.forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            syncSummary();
+        }
+
+        function syncSummary() {
+            const name = document.getElementById('res-name').value || "Guest";
+            const time = document.getElementById('res-time-input').value;
+            document.getElementById('sum-name').innerText = name;
+            document.getElementById('sum-details').innerText = `${resState.guests} @ ${time}`;
+        }
+
+        document.getElementById('reservation-form').onsubmit = (e) => {
+            e.preventDefault();
+            const time = document.getElementById('res-time-input').value;
+            document.getElementById('res-btn').innerText = "BOOKED SUCCESSFULLY";
+            document.getElementById('res-btn').style.background = "#2ecc71";
+            alert(`Table confirmed for ${time}.`);
+        };
+
+        window.onload = () => { renderMenu(); renderChefs(); };
+    </script>
+</body>
+</html>
